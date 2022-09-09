@@ -11,9 +11,10 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(fontFamily: 'FiraCode-Mediums'),
       debugShowCheckedModeBanner: false,
       title: 'Transaction Manager',
-      home: MainScreen(),
+      home: const MainScreen(),
     );
   }
 }
