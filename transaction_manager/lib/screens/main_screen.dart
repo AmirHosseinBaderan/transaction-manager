@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:transaction_manager/screens/home_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -10,20 +11,31 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int currentPage = 0;
+  Widget screen = HomeScreen();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        bottomNavigationBar: AnimatedBottomNavigationBar(
-          icons: [Icons.home, Icons.info],
-          activeIndex: currentPage,
-          inactiveColor: Colors.black54,
-          onTap: (index) {
-            setState(() {
-              currentPage = index;
-            });
-          },
-        ));
+      backgroundColor: Colors.white,
+      bottomNavigationBar: AnimatedBottomNavigationBar(
+        icons: [Icons.home, Icons.info],
+        activeIndex: currentPage,
+        inactiveColor: Colors.black54,
+        onTap: (index) {
+          if (index == 0) {
+            screen = HomeScreen();
+          } else {
+            screen = Container(
+              child: Text('Info Page'),
+            );
+          }
+
+          setState(() {
+            currentPage = index;
+          });
+        },
+      ),
+      body: screen,
+    );
   }
 }
