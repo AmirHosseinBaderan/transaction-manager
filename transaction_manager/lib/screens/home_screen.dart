@@ -4,6 +4,7 @@ import 'package:transaction_manager/constant.dart';
 import 'package:transaction_manager/screens/new_transaction_screen.dart';
 import 'package:transaction_manager/widgets/home/empty_transaction.dart';
 import 'package:transaction_manager/widgets/home/header.dart';
+import 'package:transaction_manager/widgets/home/transactions_list.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SizedBox(
         width: double.infinity,
         child: Column(
-          children: [Header(), const EmptyTransaction()],
+          children: [Header(), const TransactionList()],
         ),
       ),
     ));
