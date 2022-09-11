@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:transaction_manager/constant.dart';
+import 'package:transaction_manager/screens/new_transaction_screen.dart';
 import 'package:transaction_manager/widgets/home/empty_transaction.dart';
 import 'package:transaction_manager/widgets/home/header.dart';
 
@@ -20,7 +21,10 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         backgroundColor: kPrupleColor,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (builder) => const NewTransaction()));
+        },
       ),
       body: SizedBox(
         width: double.infinity,
