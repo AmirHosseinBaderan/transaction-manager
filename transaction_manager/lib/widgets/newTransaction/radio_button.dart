@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class RadioChose extends StatelessWidget {
+class RadioChose extends StatefulWidget {
   final int value;
   final int groupValue;
   final Function(int?) onChanged;
@@ -14,12 +14,20 @@ class RadioChose extends StatelessWidget {
       required this.title});
 
   @override
+  State<RadioChose> createState() => _RadioChoseState();
+}
+
+class _RadioChoseState extends State<RadioChose> {
+  @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Radio(value: value, groupValue: groupValue, onChanged: onChanged),
-        Text(title)
+        Radio(
+            value: widget.value,
+            groupValue: widget.groupValue,
+            onChanged: widget.onChanged),
+        Text(widget.title)
       ],
     );
   }
