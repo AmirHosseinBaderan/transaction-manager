@@ -1,11 +1,20 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:transaction_manager/constant.dart';
+import 'package:transaction_manager/models/transaction.dart';
+import 'package:transaction_manager/screens/home_screen.dart';
 import 'package:transaction_manager/widgets/newTransaction/radio_button.dart';
 
 import '../widgets/newTransaction/input_text.dart';
 
 class NewTransaction extends StatefulWidget {
   const NewTransaction({super.key});
+
+  static int groupId = 1;
+
+  static TextEditingController descriptionController = TextEditingController();
+  static TextEditingController amoundController = TextEditingController();
 
   @override
   State<NewTransaction> createState() => _NewTransactionState();
@@ -27,11 +36,13 @@ class _NewTransactionState extends State<NewTransaction> {
             padding: const EdgeInsets.only(top: 10, right: 20),
             child: Text(_title, style: const TextStyle(fontSize: 20)),
           ),
-          const InputOutline(hint: 'توضیحات'),
-          const InputOutline(
-            hint: 'مبلغ',
-            inputTtype: TextInputType.number,
-          ),
+          InputOutline(
+              hint: 'توضیحات',
+              controller: NewTransaction.descriptionController),
+          InputOutline(
+              hint: 'مبلغ',
+              inputTtype: TextInputType.number,
+              controller: NewTransaction.amoundController),
           Padding(
             padding: const EdgeInsets.all(15),
             child: OutlinedButton(
@@ -46,14 +57,22 @@ class _NewTransactionState extends State<NewTransaction> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 RadioChose(
-                    value: 0,
-                    groupValue: 10,
-                    onChanged: (value) {},
+                    value: 1,
+                    groupValue: NewTransaction.groupId,
+                    onChanged: (value) {
+                      setState(() {
+                        NewTransaction.groupId = value!;
+                      });
+                    },
                     title: 'پرداختی'),
                 RadioChose(
-                    value: 1,
-                    groupValue: 10,
-                    onChanged: (value) {},
+                    value: 2,
+                    groupValue: NewTransaction.groupId,
+                    onChanged: (value) {
+                      setState(() {
+                        NewTransaction.groupId = value!;
+                      });
+                    },
                     title: 'دریافتی')
               ],
             ),
@@ -67,7 +86,17 @@ class _NewTransactionState extends State<NewTransaction> {
                       padding:
                           MaterialStateProperty.all(const EdgeInsets.all(15)),
                       backgroundColor: MaterialStateProperty.all(kPrupleColor)),
-                  onPressed: () {},
+                  onPressed: () {
+                    HomeScreen.transactions.add(Transaction(
+                        id: Random().nextInt(2500),
+                        description: NewTransaction.descriptionController.text,
+                        amount: int.parse(NewTransaction.amoundController.text),
+                        date: DateTime.now().toString(),
+                        isPayed: NewTransaction.groupId == 1 ? true : false));
+                    NewTransaction.descriptionController.text = '';
+                    NewTransaction.amoundController.text = '';
+                    Navigator.pop(context);
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [Text('ذخیره'), Icon(Icons.save)],
@@ -83,7 +112,9 @@ class _NewTransactionState extends State<NewTransaction> {
                       padding:
                           MaterialStateProperty.all(const EdgeInsets.all(15)),
                       backgroundColor: MaterialStateProperty.all(kRedColor)),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [Text('لغو'), Icon(Icons.cancel)],
