@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:transaction_manager/screens/home_screen.dart';
+import 'package:transaction_manager/screens/info_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -11,7 +12,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int currentPage = 0;
-  Widget screen = HomeScreen();
+  Widget screen = const HomeScreen();
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +24,9 @@ class _MainScreenState extends State<MainScreen> {
         inactiveColor: Colors.black54,
         onTap: (index) {
           if (index == 0) {
-            screen = HomeScreen();
+            screen = const HomeScreen();
           } else {
-            screen = Container(
-              child: Text('Info Page'),
-            );
+            screen = const InfoScreen();
           }
 
           setState(() {
