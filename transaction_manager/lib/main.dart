@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:transaction_manager/db/db.dart';
 import 'package:transaction_manager/screens/main_screen.dart';
 
 void main() {
+  initDb();
   runApp(const App());
 }
 
