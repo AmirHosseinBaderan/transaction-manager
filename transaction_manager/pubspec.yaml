@@ -40,7 +40,7 @@ dependencies:
   hive_flutter: ^1.1.0
   hive_generator: ^1.1.3
   path_provider: ^2.0.11
-  jalali_calendar: ^1.0.4
+  shamsi_date: ^1.0.1
 
 dev_dependencies:
   flutter_test:
