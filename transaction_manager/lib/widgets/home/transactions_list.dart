@@ -39,6 +39,22 @@ class TransactionList extends StatelessWidget {
                                                     kPrupleColor)),
                                         onPressed: () {
                                           onItemRemoved(index);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: const Text(
+                                              'مورد با موفقیت حذف شد',
+                                              style:
+                                                  TextStyle(color: kRedColor),
+                                            ),
+                                            duration:
+                                                const Duration(seconds: 2),
+                                            padding: const EdgeInsets.all(25),
+                                            behavior: SnackBarBehavior.floating,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                          ));
                                           Navigator.pop(context);
                                         },
                                         child: Row(
