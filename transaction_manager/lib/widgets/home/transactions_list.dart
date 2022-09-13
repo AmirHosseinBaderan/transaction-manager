@@ -2,13 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:transaction_manager/constant.dart';
 import 'package:transaction_manager/models/transaction.dart';
 import 'package:transaction_manager/screens/home_screen.dart';
+import 'package:transaction_manager/screens/main_screen.dart';
+import 'package:transaction_manager/screens/new_transaction_screen.dart';
 import 'package:transaction_manager/widgets/home/transaction_item.dart';
+
+import '../../main.dart';
 
 class TransactionList extends StatelessWidget {
   List<Transaction> transactions;
   Function(int index) onItemRemoved;
+  Function() onItemUpdated;
+
   TransactionList(
-      {super.key, required this.transactions, required this.onItemRemoved});
+      {super.key,
+      required this.transactions,
+      required this.onItemRemoved,
+      required this.onItemUpdated});
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +26,14 @@ class TransactionList extends StatelessWidget {
             itemCount: transactions.length,
             itemBuilder: (context, index) {
               return GestureDetector(
+                  onTap: () {
+                    NewTransaction.index = index;
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => const NewTransaction()));
+                    onItemUpdated();
+                  },
                   onLongPress: () {
                     showDialog(
                         context: context,
