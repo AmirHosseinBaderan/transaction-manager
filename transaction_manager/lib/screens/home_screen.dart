@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:transaction_manager/constant.dart';
 import 'package:transaction_manager/main.dart';
@@ -32,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         backgroundColor: kPrupleColor,
         onPressed: () {
           Navigator.push(
@@ -47,20 +46,25 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SizedBox(
         width: double.infinity,
         child: Column(
-          children: [
-            Header(),
-            TransactionList(
-              transactions: HomeScreen.transactions,
-              onItemRemoved: (index) {
-                var box = Hive.box<Transaction>(transactionsBox);
-                box.deleteAt(index);
-                App.getDate();
-                setState(() {});
-              },
-            )
-          ],
+          children: [Header(), getBody()],
         ),
       ),
     ));
   }
+
+  Widget getBody() => HomeScreen.transactions.isNotEmpty
+      ? TransactionList(
+          transactions: HomeScreen.transactions,
+          onItemRemoved: (index) {
+            var box = Hive.box<Transaction>(transactionsBox);
+            box.deleteAt(index);
+            App.getDate();
+            setState(() {});
+          },
+          onItemUpdated: () {
+            App.getDate();
+            setState(() {});
+          },
+        )
+      : const EmptyTransaction();
 }
