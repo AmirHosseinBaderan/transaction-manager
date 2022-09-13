@@ -1,12 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:transaction_manager/constant.dart';
 import 'package:transaction_manager/models/transaction.dart';
 import 'package:transaction_manager/screens/home_screen.dart';
 import 'package:transaction_manager/widgets/newTransaction/radio_button.dart';
-
 import '../widgets/newTransaction/input_text.dart';
+import 'package:persian_date/persian_date.dart';
 
 class NewTransaction extends StatefulWidget {
   const NewTransaction({super.key});
@@ -86,15 +85,21 @@ class _NewTransactionState extends State<NewTransaction> {
                       padding:
                           MaterialStateProperty.all(const EdgeInsets.all(15)),
                       backgroundColor: MaterialStateProperty.all(kPrupleColor)),
-                  onPressed: () {
-                    HomeScreen.transactions.add(Transaction(
+                  onPressed: () async {
+                    var date = Jalali.fromDateTime(DateTime.now());
+
+                    Transaction newTransaction = Transaction(
                         id: Random().nextInt(2500),
                         description: NewTransaction.descriptionController.text,
                         amount: int.parse(NewTransaction.amoundController.text),
-                        date: DateTime.now().toString(),
-                        isPayed: NewTransaction.groupId == 1 ? true : false));
-                    NewTransaction.descriptionController.text = '';
+                        date: date.toString(),
+                        isPayed: NewTransaction.groupId == 1 ? true : false);
+
+                    var transactionBox = Hive.box<Transaction>(transactionsBox);
+                    await transactionBox.add(newTransaction);
+
                     NewTransaction.amoundController.text = '';
+                    NewTransaction.descriptionController.text = '';
                     Navigator.pop(context);
                   },
                   child: Row(
