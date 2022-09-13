@@ -6,7 +6,7 @@ import 'package:transaction_manager/widgets/home/transaction_item.dart';
 
 class TransactionList extends StatelessWidget {
   List<Transaction> transactions;
-  Function(int itemId) onItemRemoved;
+  Function(int index) onItemRemoved;
   TransactionList(
       {super.key, required this.transactions, required this.onItemRemoved});
 
@@ -38,8 +38,7 @@ class TransactionList extends StatelessWidget {
                                                 MaterialStateProperty.all(
                                                     kPrupleColor)),
                                         onPressed: () {
-                                          onItemRemoved(HomeScreen
-                                              .transactions[index].id);
+                                          onItemRemoved(index);
                                           Navigator.pop(context);
                                         },
                                         child: Row(
