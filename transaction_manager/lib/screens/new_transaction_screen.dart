@@ -1,11 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 import 'package:transaction_manager/constant.dart';
 import 'package:transaction_manager/models/transaction.dart';
-import 'package:transaction_manager/screens/home_screen.dart';
 import 'package:transaction_manager/widgets/newTransaction/radio_button.dart';
 import '../widgets/newTransaction/input_text.dart';
-import 'package:persian_date/persian_date.dart';
 
 class NewTransaction extends StatefulWidget {
   const NewTransaction({super.key});
@@ -85,21 +86,36 @@ class _NewTransactionState extends State<NewTransaction> {
                       padding:
                           MaterialStateProperty.all(const EdgeInsets.all(15)),
                       backgroundColor: MaterialStateProperty.all(kPrupleColor)),
-                  onPressed: () async {
-                    var date = Jalali.fromDateTime(DateTime.now());
+                  onPressed: () {
+                    var dateTime = Jalali.now();
 
                     Transaction newTransaction = Transaction(
                         id: Random().nextInt(2500),
                         description: NewTransaction.descriptionController.text,
                         amount: int.parse(NewTransaction.amoundController.text),
-                        date: date.toString(),
+                        date:
+                            '${dateTime.year}/${dateTime.month}/${dateTime.day} : ${dateTime.hour}:${dateTime.minute}',
                         isPayed: NewTransaction.groupId == 1 ? true : false);
 
                     var transactionBox = Hive.box<Transaction>(transactionsBox);
-                    await transactionBox.add(newTransaction);
+                    transactionBox.add(newTransaction);
 
                     NewTransaction.amoundController.text = '';
                     NewTransaction.descriptionController.text = '';
+
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: const Text(
+                        'مورد با موفقیت ثبت شد',
+                        style: TextStyle(color: kGreenColor),
+                      ),
+                      duration: const Duration(seconds: 2),
+                      padding: const EdgeInsets.all(25),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ));
+
                     Navigator.pop(context);
                   },
                   child: Row(
