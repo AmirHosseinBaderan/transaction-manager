@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:transaction_manager/constant.dart';
+import 'package:transaction_manager/main.dart';
 import 'package:transaction_manager/models/transaction.dart';
 import 'package:transaction_manager/screens/new_transaction_screen.dart';
 import 'package:transaction_manager/widgets/home/empty_transaction.dart';
@@ -18,6 +20,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    App.getDate();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
@@ -30,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
               context,
               MaterialPageRoute(
                   builder: (builder) => const NewTransaction())).then((value) {
+            App.getDate();
             setState(() {});
           });
         },
@@ -41,9 +51,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Header(),
             TransactionList(
               transactions: HomeScreen.transactions,
-              onItemRemoved: (id) {
-                HomeScreen.transactions
-                    .removeWhere((element) => element.id == id);
+              onItemRemoved: (index) {
+                var box = Hive.box<Transaction>(transactionsBox);
+                box.deleteAt(index);
+                App.getDate();
                 setState(() {});
               },
             )
