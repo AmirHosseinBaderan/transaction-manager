@@ -2,9 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:shamsi_date/shamsi_date.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:transaction_manager/constant.dart';
 import 'package:transaction_manager/models/transaction.dart';
+import 'package:transaction_manager/screens/home_screen.dart';
 import 'package:transaction_manager/widgets/newTransaction/radio_button.dart';
 import '../widgets/newTransaction/input_text.dart';
 
@@ -15,13 +16,30 @@ class NewTransaction extends StatefulWidget {
 
   static TextEditingController descriptionController = TextEditingController();
   static TextEditingController amoundController = TextEditingController();
+  static int index = -1;
 
   @override
   State<NewTransaction> createState() => _NewTransactionState();
 }
 
 class _NewTransactionState extends State<NewTransaction> {
-  final String _title = 'تراکنش جدید';
+  String _title = 'تراکنش جدید';
+  String date = 'تاریخ';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    if (NewTransaction.index >= 0) {
+      Transaction transaction = HomeScreen.transactions[NewTransaction.index];
+      _title = 'ویرایش ${transaction.description}';
+      NewTransaction.amoundController.text = transaction.amount.toString();
+      NewTransaction.descriptionController.text = transaction.description;
+      NewTransaction.groupId = transaction.isPayed ? 1 : 2;
+      date = transaction.date;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +64,16 @@ class _NewTransactionState extends State<NewTransaction> {
           Padding(
             padding: const EdgeInsets.all(15),
             child: OutlinedButton(
-              onPressed: () {},
-              child:
-                  const Text('تاریخ', style: TextStyle(color: Colors.black87)),
+              onPressed: () async {
+                Jalali? time = await showPersianDatePicker(
+                    context: context,
+                    initialDate: Jalali.now(),
+                    firstDate: Jalali(1385, 8),
+                    lastDate: Jalali(1450, 9));
+                date = '${time?.year}/${time?.month}/${time?.day}';
+                setState(() {});
+              },
+              child: Text(date, style: TextStyle(color: Colors.black87)),
             ),
           ),
           Padding(
@@ -86,19 +111,27 @@ class _NewTransactionState extends State<NewTransaction> {
                       padding:
                           MaterialStateProperty.all(const EdgeInsets.all(15)),
                       backgroundColor: MaterialStateProperty.all(kPrupleColor)),
-                  onPressed: () {
-                    var dateTime = Jalali.now();
-
-                    Transaction newTransaction = Transaction(
-                        id: Random().nextInt(2500),
+                  onPressed: () async {
+                    Transaction transaction = Transaction(
+                        id: NewTransaction.index >= 0
+                            ? HomeScreen.transactions[NewTransaction.index].id
+                            : Random().nextInt(2500),
                         description: NewTransaction.descriptionController.text,
                         amount: int.parse(NewTransaction.amoundController.text),
-                        date:
-                            '${dateTime.year}/${dateTime.month}/${dateTime.day} : ${dateTime.hour}:${dateTime.minute}',
+                        date: date,
                         isPayed: NewTransaction.groupId == 1 ? true : false);
 
                     var transactionBox = Hive.box<Transaction>(transactionsBox);
-                    transactionBox.add(newTransaction);
+                    if (NewTransaction.index >= 0) {
+                      try {
+                        await transactionBox.putAt(
+                            NewTransaction.index, transaction);
+                      } catch (e) {
+                        print(e);
+                      }
+                    } else {
+                      await transactionBox.add(transaction);
+                    }
 
                     NewTransaction.amoundController.text = '';
                     NewTransaction.descriptionController.text = '';
