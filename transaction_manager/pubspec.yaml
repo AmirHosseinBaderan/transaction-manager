@@ -41,6 +41,7 @@ dependencies:
   hive_generator: ^1.1.3
   path_provider: ^2.0.11
   shamsi_date: ^1.0.1
+  persian_datetime_picker: ^2.5.0
 
 dev_dependencies:
   flutter_test:
