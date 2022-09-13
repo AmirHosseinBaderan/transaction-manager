@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:transaction_manager/constant.dart';
-import 'package:transaction_manager/db/db.dart';
 import 'package:transaction_manager/models/transaction.dart';
 import 'package:transaction_manager/screens/home_screen.dart';
 import 'package:transaction_manager/screens/main_screen.dart';
